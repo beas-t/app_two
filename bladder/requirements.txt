@@ -1,0 +1,16 @@
+Django==6.0.3
+djangorestframework==3.16.1
+django-cors-headers==4.9.0
+djangorestframework-simplejwt==5.5.1
+mysqlclient==2.2.8
+bcrypt==5.0.0
+torch==2.10.0
+torchvision==0.25.0
+numpy==2.4.3
+pillow==12.1.1
+opencv-python==4.13.0.92
+asgiref==3.11.1
+sqlparse==0.5.5
+tzdata==2025.3
+PyJWT==2.11.0
+gunicorn==24.0.1
