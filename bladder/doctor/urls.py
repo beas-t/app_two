@@ -11,7 +11,7 @@ from .views import (
     HelpArticleViewSet, HomeDashboardView, NotificationViewSet, LogoutView,
     PrivacyPolicyViewSet, AccountDeletionView, RecommendationViewSet, ScanReportCreateView,
     UserSessionViewSet, SecurityStatusView, ChangePasswordView, SettingsSummaryView,
-    TeamMemberViewSet, TeamInvitationViewSet, TrainingModuleViewSet
+    TeamMemberViewSet, TeamInvitationViewSet, TrainingModuleViewSet, DataSyncView
 )
 
 router = DefaultRouter()
@@ -54,5 +54,6 @@ urlpatterns = [
     path('security-status/', SecurityStatusView.as_view(), name='security-status'),
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('settings-summary/', SettingsSummaryView.as_view(), name='settings-summary'),
+    path('data-sync/', DataSyncView.as_view(), name='data-sync'),
     path('', include(router.urls)),
 ]

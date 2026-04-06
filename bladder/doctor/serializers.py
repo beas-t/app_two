@@ -2,21 +2,6 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import DoctorProfile, Patient, ScanReport, Appointment, AppInfo, Feature, AnalyticsData, ScanValidation, Backup, BackupSettings, SupportMessage, AccessibilitySettings, DisplaySettings, Equipment, EstimationResult, DataExport, Feedback, PasswordResetToken, HelpArticle, Notification, PrivacyPolicy, Recommendation, UserSession, TeamMember, TeamInvitation, TrainingModule, TrainingProgress
 
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'password']
-
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email', ''),
-            password=validated_data['password']
-        )
-        return user
-
 class DoctorProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email')
     username = serializers.CharField(source='user.username', read_only=True)
@@ -56,12 +41,30 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
             
         return super().update(instance, validated_data)
 
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    profile = DoctorProfileSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'password', 'profile']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=validated_data['password']
+        )
+        return user
+
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = '__all__'
+        read_only_fields = ['doctor']
 
 class ScanReportSerializer(serializers.ModelSerializer):
+    patient = PatientSerializer(read_only=True)
     patient_name = serializers.ReadOnlyField(source='patient.name')
     
     class Meta:
@@ -75,6 +78,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ['id', 'doctor', 'patient', 'date', 'time', 'status', 'appointment_type', 'location', 'duration_minutes', 'reason', 'doctor_name', 'patient_name']
+        read_only_fields = ['doctor']
 
 class FeatureSerializer(serializers.ModelSerializer):
     class Meta:
